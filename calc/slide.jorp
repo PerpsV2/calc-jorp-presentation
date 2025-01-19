@@ -1,0 +1,938 @@
+slide-container id="slide" style="width:100vw; height:56.25vw;";
+
+div class+="slide" { }
+
+div {
+    div class+="title-bar" id="title-slide-nbp" {
+        h1 class+="center-center" : 1. The N-Body Problem;
+    }
+
+    vertical-flex *,***** class+="slide" id="slide-nbp" {
+        0 div class+="title-bar" { h1 class+="center-center" : The N-Body Problem; }
+        
+        1 div {
+            vertical-flex ***,*****,** {
+                0 horizontal-flex *,****,* {
+                    1 h3 id="nbp1" class+="padding center-text" : 
+                    Problem: Predict the future motion of \(n\) number of objects gravitationally interacting with each other.;
+                }
+                1 horizontal-flex *,**,*** id="nbp2" {
+                    1 div class+="padding" {
+                        div class+="info-box" { 
+                            img src="calc/assets/gravity.drawio.png"; 
+                        }
+                    }
+                    2 div class+="padding" {
+                        &horizontal-flex *,* class+="bottom-margin" {
+                            0 p : \(\textbf{F}=\frac{GMm}{r^2}\);
+                            1 p : \(\textbf{F}=m\textbf{a}\);
+                        }
+                        &p id="nbp3" class+="bottom-margin" : \(\textbf{a}=\frac{GM}{r^2}\);
+                        &p id="nbp4" class+="bottom-margin" : This equation models the gravitational acceleration between two objects.;
+                        &p id="nbp5" : The total gravitational acceleration is calculated by summing up individual accelerations.;
+                    } 
+                }
+            }
+
+            vertical-flex ****,** {
+                0 div class+="padding" {
+                    &div id="nbp6" {
+                        &p class+="bottom-margin" : The n-body problem can be modelled in the following differential equation:;
+                        &p : $$\frac{d^2x_i}{dt^2}=\sum_{\substack{j=1\\j\neq{i}}}^n\frac{Gm_j}{||x_j(t)-x_i(t)||^2}$$;
+                    }
+                    &p id="nbp7" class+="bottom-margin" : For \(0 \le n \le 2\), the n-body problem can always be solved analytically.;
+                    &p id="nbp8" class+="bottom-margin" : Whenever there is at least three bodies however, no general solution exists.;
+                    &p id="nbp9" class+="bottom-margin" : Slight differences in similar initial states grow more chaotic/unpredictable over time.;
+                    &p id="nbp10" class+="bottom-margin" : Instead, various approximations must be used.;
+                }
+                1 div id="nbp11" class+="padding-large" { h3 class+="vertical-center" : This is known as the three body problem; }
+            }
+
+            horizontal-flex *,**,* id="nbp12" class+="black" {
+                0 vertical-flex *,* {
+                    0 p class+="center-center" : Standard;
+                    1 p class+="center-center" : $$\textbf{v}=\begin{bmatrix}0\\0.1\\0\end{bmatrix}\rightarrow\begin{bmatrix}0\\0.2\\0\end{bmatrix}$$;
+                }
+                1 horizontal-flex *,* {
+                    0 vertical-flex *,* {
+                        0 video id="vid1" {
+                            source src="calc/assets/control-timelapse.mp4" type="video/mp4";
+                        } 
+                        1 video id="vid2" {
+                            source src="calc/assets/inc-velocity-timelapse.mp4" type="video/mp4";
+                        } 
+                    }
+                    1 vertical-flex *,* {
+                        0 video id="vid3" {
+                            source src="calc/assets/dec-position-timelapse.mp4" type="video/mp4";
+                        } 
+                        1 video id="vid4" {
+                            source src="calc/assets/inc-mu-timelapse.mp4" type="video/mp4";
+                        } 
+                    }
+                }
+                2 vertical-flex *,* {
+                    0 p class+="center-center" : $$\textbf{x}=\begin{bmatrix}100\\0\\0\end{bmatrix}\rightarrow\begin{bmatrix}99\\0\\0\end{bmatrix}$$;
+                    1 p class+="center-center" : $$m=10\rightarrow{11}$$;
+                }
+            }
+
+            vertical-flex *,***,*,*,*,* id="nbp13" class+="padding" {
+                1 horizontal-flex *,***,* {
+                    1 h2 class+="margin-bottom vertical-center" : Goal: Analyze different methods for approximating solutions to the n-body problem.;
+                }
+                2 h3 class+="margin-bottom vertical-center" id="nbp14" : There will be two general categories:;
+                3 h3 class+="margin-bottom vertical-center" id="nbp15" : 1. Using numerical integrators.;
+                4 h3 class+="margin-bottom vertical-center" id="nbp16" : 2. Using Kepler's laws.;
+            }
+        }
+    }
+
+    div class+="title-bar" id="title-slide-ni" {
+        h1 class+="center-center" : 2. Numerical Integrators;
+    }
+
+    vertical-flex *,***** class+="slide" id="slide-ni" {
+        0 div class+="title-bar" { h1 class+="center-center" : Numerical Integrators; }
+        
+        1 div {
+            div class+="padding" {
+                &p class+="bottom-margin" id="ni1" : Numerical integrators are methods that allow us to approximate integrals.;
+                &div id="ni2" {
+                    &p class+="bottom-margin" : The methods shown in the presentation are all iterative methods which
+                    can solve initial value problems in the form:;
+                    &p class+="bottom-margin" : $$\frac{dy}{dt}=f(t,y),\:\:\:\:y(t_0)=y_0$$;
+                }
+                &p class+="bottom-margin" id="ni3" : Although the n-body problem is a second order differential, these methods can be 
+                applied multiple times to solve higher order equations.;
+                &p class+="bottom-margin" id="ni4" : The methods also all have a timestep \(\Delta{t}\), which is how much \(t\) changes each iteration.;
+                &p class+="bottom-margin" id="ni5" : Larger timesteps are less accurate, but are faster to compute.;
+            }
+
+            div class+="padding" { 
+                &h2 class+="bottom-margin" id="ni6" : Euler's Method;
+                &p class+="bottom-margin" id="ni7" : This is the most simplistic (and inaccurate) numerical integrator.;
+                &div id="ni8" {
+                    &p : $$\textbf{v}_{i+1}=\textbf{v}_i+\textbf{a}_i\cdot\Delta{t}$$;
+                    &p : $$\textbf{x}_{i+1}=\textbf{x}_i+\textbf{v}_i\cdot\Delta{t}$$;
+                }
+                &div id="ni9" {
+                    &p class+="bottom-margin" : Each iteration, acceleration is calculated at that timeframe.;
+                    &p class+="bottom-margin" : Acceleration is then added to velocity, which is then added to position.;
+                }
+                &div id="ni10" {
+                    &p class+="bottom-margin" : The time elapsed can then be calculated using the formula:;
+                    &p class : $$t=t_0+i\cdot\Delta{t}$$;
+                }
+            }
+
+            div class+="padding" {
+                &h3 class+="bottom-margin center-text" id="ni11" : How does it work?;
+                &div class+="center-center" {
+                    &div style="width:80vw; height:38vw;" id="ni-euler-calc";
+                }
+            }
+
+            div class+="padding" {
+                &p class+="bottom-margin" id="ni12" : Euler's method is non-symplectic, which in this context is important because
+                it means it allows total energy to deviate without bound. (bad);
+                &p class+="bottom-margin-big" id="ni13" : It's also a first order method which will make it generally less accurate
+                than higher order methods. (also bad);
+                &div id="ni14" {
+                    &h2 class+="bottom-margin" : Other algorithms I'll be testing:;
+                    &h3 class+="bottom-margin" : Leapfrog;
+                    &p class+="bottom-margin" : - Second order symplectic integrator;
+                }
+                &div id="ni15" {
+                    &h3 class+="bottom-margin" : Runge-Kutta 4;
+                    &p class+="bottom-margin" : - Fourth order non-symplectic integrator;
+                }
+                &div id="ni16" {
+                    &h3 class+="bottom-margin" : Dormand-Prince 5;
+                    &p class+="bottom-margin" : - Fifth order non-symplectic integrator;
+                }
+            }
+        }
+    }
+
+    div class+="title-bar" id="title-slide-peo" {
+        h1 class+="center-center" : 2.5 Polar Coordinates and Ellipses;
+    }
+
+    vertical-flex *,***** class+="slide" id="slide-peo" {
+        0 div class+="title-bar" { h2 class+="center-center" : Polar Coordinates and Ellipses; }
+        
+        1 div {
+            vertical-flex *,*** {
+                0 div class+="padding"  {
+                    &p class+="bottom-margin" id="peo1" : Because of how often ellipses and conic sections are used in the  
+                    context of orbits, calculations can be greatly simplified using polar coordinates.;
+                    &p id="peo2" : Instead of having an \(x\) and \(y\) coordinate like the cartesian system,
+                    polar coordinates have an angle \(\theta\) and a distance \(r\).
+                    $$(x, y)\rightarrow(r\cos{\theta},r\sin{\theta})$$;
+                }
+                1 horizontal-flex **,***,** class+="padding" id="peo3" {
+                    1 div {
+                        div class +="info-box" {
+                            img src="calc/assets/coordinates.drawio.png";
+                        }
+                    }
+                }
+            }
+
+            div class+="padding" {
+                &p class+="bottom-margin" id="peo4" : In polar coordinates, all the conic sections can be generated via one equation:;
+                &div id="peo5" {
+                    &p class+="bottom-margin" : $$r(\theta)=\frac{l}{1-\varepsilon\cos{(\theta-\theta_0)}}$$;
+                    &p class+="bottom-margin center-text" : \(\varepsilon=\) eccentricity\(\:\:\:\:l=\) size\(\:\:\:\:\theta_0=\) rotation;
+                }
+            }
+            horizontal-flex *,*,* {
+                    1 vertical-flex ****,***,* {
+                        1 div id="peo6" {
+                        &p class+="bottom-margin" : 
+                        \(\varepsilon=0\) for a circle
+                        \(0\lt\varepsilon\lt{1}\) for an ellipse 
+                        \(\varepsilon=1\) for a parabola
+                        \(\varepsilon\gt{1}\) for a hyperbola;
+                    }
+                }
+            }
+            vertical-flex *,10 {
+                1 div class+="center-center" {
+                    &div style="width:80vw; height:38vw;" id="peo-conic-calc";
+                }
+            }
+
+            div class+="padding" {
+                &h2 class+="bottom-margin" id="peo7" : Characteristics of an ellipse;
+            }
+            vertical-flex *,****,** id="peo8" {
+                1 horizontal-flex ***,**** class+="padding" {
+                    0 div {
+                        div class +="info-box" {
+                            img src="calc/assets/ellipse.drawio.png";
+                        }
+                    }
+                    1 div class+="padding" {
+                        &div class+="bottom-margin" id="peo9" {
+                            &p class+="bottom-margin" : Semi-major axis: The ellipse's longest radius.;
+                            &p class+="bottom-margin" : Semi-minor axis: The ellipse's shortest radius.;
+                        }
+                        &div class+="bottom-margin" id="peo10" {
+                            &p class+="bottom-margin" : Focus (pl. Foci): The point in which a conic section is constructed around.;
+                            &p class+="bottom-margin" : Ellipses have two foci, their distance from the origin is the semi-major axis multiplied by eccentricity.;
+                        }
+                        // The sum of the distance from each point an ellipse to the foci is constant.
+                        &p id="peo11" : The equation for a conic section in polar form 
+                        has the origin at one of the foci.;
+                    }
+                }
+            }
+        }
+    }
+
+    div class+="title-bar" id="title-slide-kl" {
+        h1 class+="center-center" : 3. Kepler's Laws of Planetary Motion;
+    }
+
+    vertical-flex *,***** class+="slide" id="slide-kl" {
+        0 div class+="title-bar" { h2 class+="center-center" : Kepler's Laws of Planetary Motion; }
+        
+        1 div {
+            div class+="padding" {
+                &p class+="bottom-margin" id="kl1" : 
+                Objects gravitationally interacting with each other can have a regularly recurring 
+                elliptical trajectory. This is called an orbit.;
+                &p class+="bottom-margin" id="kl2" : Orbits tend to form between a smaller object, and a much more massive object.;
+                &div class+="indent" id="kl3" {
+                    &p class+="bottom-margin" : - A satellite orbiting the earth.;
+                    &p class+="bottom-margin-big" : - The earth orbiting the sun.;
+                }
+                &p class+="bottom-margin-big" id="kl4" : Most of the time:
+                The more massive object can be thought of essentially stationary.;
+                &p class+="bottom-margin-big" id="kl5" : Forces caused by other objects orbiting the same body are almost negligible.;
+                &p class+="bottom-margin" id="kl6" : 
+                With these two assumptions, n-body problems like predicting future trajectories of planets in 
+                the solar system, can be broken down into multiple one-body problems, where a single object 
+                is affected by a central force.;
+            }
+
+            div class+="padding" {
+                &h2 class+="bottom-margin" id="kl7" : Characteristics of an orbit;
+            }
+            vertical-flex **,***** id="kl8" {
+                1 horizontal-flex ***,***** class+="padding" {
+                    0 div {
+                        div class +="info-box" {
+                            img src="calc/assets/orbit.drawio.png";
+                        }
+                    }
+                    1 div class+="padding" {
+                        &p class+="bottom-margin" id="kl9" : The auxiliary circle has a radius of the orbit's semi-major axis.;
+                        &p class+="bottom-margin-big" id="kl10" : Coordinates from the ellipse can be converted to coordinates of the auxiliary circle by vertically scaling
+                        by a factor of \(\frac{semi-major\:\:axis}{semi-minor\:\:axis}\);
+                        &div id="kl11" {
+                            &p class+="bottom-margin" : True anomaly: Angle of the planet from periapsis.;
+                            &p class+="bottom-margin" : Eccentric anomaly: Angle of the planet from periapsis 
+                            if it were on the auxiliary circle.;
+                        }
+                    }
+                }
+            }
+
+            div class+="padding" {
+                &p class+="bottom-margin-big" id="kl12" : Kepler's laws describe the motion of planets in orbit around a star.;
+                &p class+="bottom-margin" id="kl13" : 1. Planets orbit in ellipses with the star at one of the foci.;
+                &p class+="bottom-margin" id="kl14" : 2. A line segment between a planet and the star sweeps equal areas under equal periods of time.;
+                &p class+="bottom-margin-big" id="kl15" : 3. The (orbital period)\(^2\) of a planet is proportional to the orbit's (semi-major axis)\(^3\).;
+                &p class+="bottom-margin" id="kl16" : These can all be proven as a direct consequence of Newton's law of universal gravitation.
+                $$\textbf{F}=\frac{GMm}{r^2}$$;
+            }
+
+            div class+="padding" {
+                &p class+="bottom-margin" id="kl17" : Start with polar position and derive by time twice to get polar acceleration.;
+                &div class+="indent bottom-margin" id="kl18" {
+                    &p : \((r\cos{\theta},r\sin{\theta})\);
+                    &p : \((r'\cos{\theta}-r\theta'\sin{\theta},r'\sin{\theta}+r\theta'\cos{\theta})\);
+                    &p : \((r''\cos{\theta}-2r'\theta'\sin{\theta}-r(\theta')^2\cos{\theta}-r\theta''\sin{\theta},\\
+                    r''\sin{\theta}+2r'\theta'\cos{\theta}-r(\theta')^2\sin{\theta}+r\theta''\cos{\theta})\);
+                }
+                &p class+="bottom-margin" id="kl19" : This acceleration splits into two parts:;
+                &div class+="indent bottom-margin" id="kl20" {
+                    &p : Radial    : \((r''-r(\theta')^2)(\cos{\theta},\sin{\theta})\);
+                    &p : Transverse: \((2r'\theta'+r\theta'')(-\sin{\theta},\cos{\theta})\);
+                }
+                &p class+="bottom-margin" id="kl21" : The position of a body in orbit can then be calculated by solving the following system:;
+                &p id="kl22" : $$r''-r(\theta')^2=-\frac{GM}{r^2}\:\:\:\:\:2r'\theta'+r\theta''=0$$;
+            }
+
+            div class+="padding" { 
+                &p class+="bottom-margin-big" id="kl23" : The following can then be acquired:;
+                &div class+="indent bottom-margin" id="kl24" {
+                    &p : \(r(\theta)=\frac{1}{\frac{GM}{h^2}-\varepsilon\cos{\theta}}\:\:\:\:\:\:\:\:\:
+                    \int_{c_1}^{c_1+D}{r(\theta)}d\theta=\int_{c_2}^{c_2+D}{r(\theta)}d\theta\:\:\:\:\:\:\:\:\:
+                    T^2=\frac{4\pi^2}{GM}a^3\);
+                }
+                & div class+="indent bottom-margin" id="kl25" {
+                    &p class+="bottom-margin" : \(h=\) specific angular momentum \(=\textbf{v}\times{\textbf{x}}\);
+                    &p class+="bottom-margin" : \(\varepsilon=\) eccentricity \(=|\frac{\textbf{v}\times{\textbf{h}}}{GM}-\frac{\textbf{x}}{|\textbf{x}|}|\);
+                    &p class+="bottom-margin" : \(D=\) duration of time swept;
+                    &p class+="bottom-margin" : \(a=\) semi-major-axis;
+                }
+            }
+
+            div class+="padding" {
+                &h2 class+="bottom-margin-big" id="kl26" : Position as a function of time:;
+                &div class+="bottom-margin-big" id="kl27" {
+                    &p : 1. Calculate mean anomaly.;
+                    &p : $$M(t)=\frac{2\pi}{T}\cdot{t}$$;
+                }
+                &div class+="bottom-margin-big" id="kl28" {
+                    &p : 2. Approximate eccentric anomaly.;
+                    &p : $$M=E-\varepsilon\sin{E}$$;
+                }
+                &div class+="bottom-margin-big" id="kl29" {
+                    &p : 3. Calculate true anomaly.;
+                    &p : $$\theta(t)=\tan^{-1}{\frac{\sqrt{1-\varepsilon^2}\sin{E}}{\cos{E}-\varepsilon}}$$;
+                }
+            }
+        }
+    }
+
+    div class+="title-bar" id="title-slide-aa" {
+        h1 class+="center-center" : 4. Analyzing Accuracy;
+    }
+
+    vertical-flex *,***** class+="slide" id="slide-aa" {
+        0 div class+="title-bar" { h2 class+="center-center" : Analyzing Accuracy; }
+        
+        1 div {
+            div class+="padding" {
+                &h2 class+="bottom-margin-big" id="aa1" : Initial improvements;
+                &p class+="bottom-margin" id="aa2" : 
+                Rather than have individual \(G\) and \(M\) variables, they can be combined into one variable \(\mu\) 
+                as they always appear multiplied together.;
+                &p class+="bottom-margin" id="aa3" : 
+                $$\textbf{a}=\frac{\mu}{r^2}\:\:\:\:\:\:r(\theta)=\frac{1}{\frac{\mu}{h^2}-\varepsilon\cos{\theta}}$$;
+                &p class+="bottom-margin-big" id="aa4" : This is known as the standard gravitational parameter, and can be measured 
+                to a much higher degree of accuracy than \(G\) and \(M\) individually.;
+                &p class+="bottom-margin" id="aa5" : Additionally, according to the law of conservation of energy, total orbital
+                energy should stay constant, so for the non-symplectic integrators where this value 
+                can deviate without bound, the orbital energy can manually be adjusted to be fixed by scaling velocity.;
+            }
+            div class+="padding" {
+                &h2 class+="bottom-margin-big" id="aa6" : Simulating the Solar System;
+                &p class+="bottom-margin" id="aa7" : Using data from the JPL Horizons On-Line Ephemeris System, initial state vectors 
+                of objects in the solar system can be acquired.;
+            }
+            vertical-flex ***,******,* id="aa8" {
+                1 horizontal-flex *,**,**,* {
+                    1 div class+="padding" {
+                        div class +="info-box" {
+                            img src="calc/assets/inner-solar-sim.png";
+                        }
+                    }
+                    2 div class+="padding" {
+                        div class +="info-box" {
+                            img src="calc/assets/inner-solar.gif";
+                        }
+                    }
+                }
+            }
+            vertical-flex ***,******,* id="aa9" {
+                1 horizontal-flex *,**,**,* {
+                    1 div class+="padding" {
+                        div class +="info-box" {
+                            img src="calc/assets/outer-solar-sim.png";
+                        }
+                    }
+                    2 div class+="padding" {
+                        div class +="info-box" {
+                            img src="calc/assets/outer-solar.gif";
+                        }
+                    }
+                }
+            }
+
+            div class+="padding" {
+                &h2 class+="bottom-margin-big" id="aa10" : Timestep inaccuracy;
+                &p class+="bottom-margin" id="aa11" : Accuracy of numerical integrators is proportional to the size of the timestep.
+                This is not a problem for Kepler's laws.;
+            }
+            vertical-flex **,***** id="aa12" {
+                1 horizontal-flex *,***,***,***,* {
+                    1 video class+="padding-small" id="vid5" {
+                        source src="calc/assets/dormand-1e5-timelapse.mp4" type="video/mp4";
+                    } 
+                    2 video class+="padding-small" id="vid6" {
+                        source src="calc/assets/dormand-1e6-timelapse.mp4" type="video/mp4";
+                    } 
+                    3 video class+="padding-small" id="vid7" {
+                        source src="calc/assets/dormand-1e7-timelapse.mp4" type="video/mp4";
+                    } 
+                }
+            }
+
+            div class+="padding" {
+                &h2 class+="bottom-margin-big" id="aa13" : Orbital Period of the Earth;
+            }
+            vertical-flex 4,4,1,16,4 id="aa14" {
+                1 horizontal-flex *,**,*  {
+                    1 div class+="padding" {
+                        div class +="info-box" {
+                            img src="calc/assets/orbital-period-data1.png";
+                        }
+                    }
+                }
+                3 horizontal-flex *,**,* {
+                    1 div class+="padding" {
+                        div class +="info-box" {
+                            img src="calc/assets/orbital-period-graph1.png";
+                        }
+                    }
+                }
+            }
+            vertical-flex 4,4,1,16,4 id="aa15" {
+                1 horizontal-flex *,**,* {
+                    1 div class+="padding" {
+                        div class +="info-box" {
+                            img src="calc/assets/orbital-period-data2.png";
+                        }
+                    }
+                }
+                3 horizontal-flex *,**,* {
+                    1 div class+="padding" {
+                        div class +="info-box" {
+                            img src="calc/assets/orbital-period-graph2.png";
+                        }
+                    }
+                }
+            }
+            vertical-flex 4,4,1,16,4 id="aa16" {
+                1 horizontal-flex *,**,* {
+                    1 div class+="padding" {
+                        div class +="info-box" {
+                            img src="calc/assets/orbital-period-data3.png";
+                        }
+                    }
+                }
+                3 horizontal-flex *,**,* {
+                    1 div class+="padding" {
+                        div class +="info-box" {
+                            img src="calc/assets/orbital-period-graph3.png";
+                        }
+                    }
+                }
+            }
+
+            div class+="padding" {
+                &h2 class+="bottom-margin-big" id="aa17" : Orbital Energy of the Earth;
+            }
+            vertical-flex *,****,* {
+                1 horizontal-flex **,******,** {
+                    0 div class+="padding" {
+                        h3 id="aa18b" : \(1^5\times\) speed;
+                        h3 id="aa19b" : \(1^6\times\) speed;
+                        h3 id="aa20b" : \(1^7\times\) speed;
+                        h3 id="aa21b" : \(1^7\times\) speed (zoomed out);
+                    } 
+                    1 div class+="padding" {
+                        div class+="info-box" id="aa18" {
+                            img src="calc/assets/orbital-energy-graph1.png";
+                        }
+                        div class+="info-box" id="aa19" {
+                            img src="calc/assets/orbital-energy-graph2.png";
+                        }
+                        div class+="info-box" id="aa20" {
+                            img src="calc/assets/orbital-energy-graph3.png";
+                        }
+                        div class+="info-box" id="aa21" {
+                            img src="calc/assets/orbital-energy-graph4.png";
+                        }
+                    }
+                }
+            }
+
+            div class+="padding" {
+                &h2 class+="bottom-margin-big" id="aa22" : Difference to Analytical Solution;
+                &p id="aa23" : 
+                \(x_1=\langle{100},0,0\rangle\:\:\:\:\:\:\:\:v_1=\langle{0},0.1,0\rangle\:\:\:\:\:\:\:\:\:\mu_1=10\)
+                \(x_2=\langle{-100},0,0\rangle\:\:\:\:\:v_2=\langle{0},-0.1,0\rangle\:\:\:\:\:\mu_2=10\);
+            }
+            vertical-flex **,***** id="aa24" {
+                1 horizontal-flex *,***,***,***,***,* {
+                    1 video class+="padding-small" id="vid8" {
+                        source src="calc/assets/euler-timelapse.mp4" type="video/mp4";
+                    } 
+                    2 video class+="padding-small" id="vid9" {
+                        source src="calc/assets/leapfrog-timelapse.mp4" type="video/mp4";
+                    } 
+                    3 video class+="padding-small" id="vid10" {
+                        source src="calc/assets/rk4-timelapse.mp4" type="video/mp4";
+                    } 
+                    4 video class+="padding-small" id="vid11" {
+                        source src="calc/assets/dp5-timelapse.mp4" type="video/mp4";
+                    } 
+                }
+            }
+            vertical-flex *,****,* {
+                1 horizontal-flex **,*** {
+                    0 div class+="padding" {
+                        h3 id="aa25b" class+="bottom-margin-big" : \(r(\theta)=\frac{1}{0.025 - 0.015\cos{\theta}}\)
+                        Position deviation over 5000 seconds;
+                        h3 id="aa26b" : \(r(\theta)=\frac{1}{0.025 - 0.015\cos{\theta}}\)
+                        Position deviation over 5000 seconds (zoomed in);
+                    } 
+                    1 div class+="padding" {
+                        div class+="info-box" id="aa25" {
+                            img src="calc/assets/deviation-graph2.png";
+                        }
+                        div class+="info-box" id="aa26" {
+                            img src="calc/assets/deviation-graph1.png";
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+frame id="reset-nbp" {
+    id="nbp1" hide;
+    id="nbp2" hide;
+    id="nbp3" hide;
+    id="nbp4" hide;
+    id="nbp5" hide;
+    id="nbp6" hide;
+    id="nbp7" hide;
+    id="nbp8" hide;
+    id="nbp9" hide;
+    id="nbp10" hide;
+    id="nbp11" hide;
+    id="nbp12" hide;
+    id="nbp13" hide;
+    id="nbp14" hide;
+    id="nbp15" hide;
+    id="nbp16" hide;
+}
+
+frame id="reset-ni" {
+    id="ni1" hide;
+    id="ni2" hide;
+    id="ni3" hide;
+    id="ni4" hide;
+    id="ni5" hide;
+    id="ni6" hide;
+    id="ni7" hide;
+    id="ni8" hide;
+    id="ni9" hide;
+    id="ni10" hide;
+    id="ni11" hide;
+    id="ni-euler-calc" hide;
+    id="ni12" hide;
+    id="ni13" hide;
+    id="ni14" hide;
+    id="ni15" hide;
+    id="ni16" hide;
+}
+
+frame id="reset-peo" {
+    id="peo1" hide;
+    id="peo2" hide;
+    id="peo3" hide;
+    id="peo4" hide;
+    id="peo5" hide;
+    id="peo6" hide;
+    id="peo-conic-calc" hide;
+    id="peo7" hide;
+    id="peo8" hide;
+    id="peo9" hide;
+    id="peo10" hide;
+    id="peo11" hide;
+}
+
+frame id="reset-kl" {
+    id="kl1" hide;
+    id="kl2" hide;
+    id="kl3" hide;
+    id="kl4" hide;
+    id="kl5" hide;
+    id="kl6" hide;
+    id="kl7" hide;
+    id="kl8" hide;
+    id="kl9" hide;
+    id="kl10" hide;
+    id="kl11" hide;
+    id="kl12" hide;
+    id="kl13" hide;
+    id="kl14" hide;
+    id="kl15" hide;
+    id="kl16" hide;
+    id="kl17" hide;
+    id="kl18" hide;
+    id="kl19" hide;
+    id="kl20" hide;
+    id="kl21" hide;
+    id="kl22" hide;
+    id="kl23" hide;
+    id="kl24" hide;
+    id="kl25" hide;
+    id="kl26" hide;
+    id="kl27" hide;
+    id="kl28" hide;
+    id="kl29" hide;
+}
+
+frame id="reset-aa" {
+    id="aa1" hide;
+    id="aa2" hide;
+    id="aa3" hide;
+    id="aa4" hide;
+    id="aa5" hide;
+    id="aa6" hide;
+    id="aa7" hide;
+    id="aa8" hide;
+    id="aa9" hide;
+    id="aa10" hide;
+    id="aa11" hide;
+    id="aa12" hide;
+    id="aa13" hide;
+    id="aa14" hide;
+    id="aa15" hide;
+    id="aa16" hide;
+    id="aa17" hide;
+    id="aa18" hide;
+    id="aa19" hide;
+    id="aa20" hide;
+    id="aa21" hide;
+    id="aa18b" hide;
+    id="aa19b" hide;
+    id="aa20b" hide;
+    id="aa21b" hide;
+    id="aa22" hide;
+    id="aa23" hide;
+    id="aa24" hide;
+    id="aa25" hide;
+    id="aa26" hide;
+    id="aa25b" hide;
+    id="aa26b" hide;
+}
+
+anim initial-frame="frame-nbp" {
+    frame id="reset" {
+        id="title-slide-nbp" hide;
+        id="slide-nbp" hide;
+        id="title-slide-ni" hide;
+        id="slide-ni" hide;
+        id="title-slide-peo" hide;
+        id="slide-peo" hide;
+        id="title-slide-kl" hide;
+        id="slide-kl" hide;
+        id="title-slide-aa" hide;
+        id="slide-aa" hide;
+        frame id="reset-nbp";
+        frame id="reset-ni";
+        frame id="reset-peo";
+        frame id="reset-kl";
+        frame id="reset-aa";
+    }
+
+    frame id="frame-nbp" {
+        id="title-slide-nbp" show;
+    }
+    frame {
+        id="title-slide-nbp" trans hide;
+        id="slide-nbp" show;
+    }
+    frame { id="nbp1" trans show; }
+    frame { id="nbp2" trans show; }
+    frame { id="nbp3" trans show; }
+    frame { id="nbp4" trans show; }
+    frame { id="nbp5" trans show; }
+    frame {
+        frame id="reset-nbp";
+        id="nbp6" trans show;
+    }
+    frame { id="nbp7" trans show; }
+    frame { id="nbp8" trans show; }
+    frame { id="nbp9" trans show; }
+    frame { id="nbp10" trans show; }
+    frame { id="nbp11" trans show; }
+    frame {
+        frame id="reset-nbp";
+        id="nbp12" trans show;
+    }
+    frame {
+        id="vid1" play;
+        id="vid2" play;
+        id="vid3" play;
+        id="vid4" play;
+    }
+    frame {
+        frame id="reset-nbp";
+        id="nbp13" trans show;
+    }
+    frame { id="nbp14" trans show; }
+    frame { id="nbp15" trans show; }
+    frame { id="nbp16" trans show; }
+
+    frame id="frame-ni" {
+        id="slide-nbp" trans hide;
+        id="title-slide-ni" trans show;
+    }
+    frame {
+        id="title-slide-ni" trans hide;
+        id="slide-ni" show;
+    }
+    frame { id="ni1" trans show; }
+    frame { id="ni2" trans show; }
+    frame { id="ni3" trans show; }
+    frame { id="ni4" trans show; }
+    frame { id="ni5" trans show; }
+    frame {
+        frame id="reset-ni";
+        id="ni6" trans show;
+    }
+    frame { id="ni7" trans show; }
+    frame { id="ni8" trans show; }
+    frame { id="ni9" trans show; }
+    frame { id="ni10" trans show; }
+    frame {
+        frame id="reset-ni";
+        id="ni11" trans show;
+    }
+    frame { id="ni-euler-calc" trans show calculator euler(20); }
+    frame { 
+        frame id="reset-ni";
+        id="ni12" trans show;
+    }
+    frame { id="ni13" trans show; }
+    frame { id="ni14" trans show; }
+    frame { id="ni15" trans show; }
+    frame { id="ni16" trans show; }
+
+    frame id="frame-peo" {
+        id="slide-ni" trans hide;
+        id="title-slide-peo" trans show;
+    }
+    frame {
+        id="title-slide-peo" trans hide;
+        id="slide-peo" show;
+    }
+    frame { id="peo1" trans show; }
+    frame { id="peo2" trans show; }
+    frame { id="peo3" trans show; }
+    frame {
+        frame id="reset-peo";
+        id="peo4" trans show;
+        id="peo5" trans show;
+    }
+    frame { id="peo6" trans show; }
+    frame {
+        id="peo5" trans hide;
+        id="peo6" trans hide;
+        id="peo-conic-calc" trans show calculator conic;
+    }
+    frame {
+        frame id="reset-peo";
+        id="peo7" trans show;
+    }
+    frame { id="peo8" trans show; }
+    frame { id="peo9" trans show; }
+    frame { id="peo10" trans show; }
+    frame { id="peo11" trans show; }
+
+    frame id="frame-kl" {
+        id="slide-peo" trans hide;
+        id="title-slide-kl" trans show;
+    }
+    frame {
+        id="title-slide-kl" trans hide;
+        id="slide-kl" show;
+    }
+    frame { id="kl1" trans show; }
+    frame { 
+        id="kl2" trans show; 
+        id="kl3" trans show;
+    }
+    frame { id="kl4" trans show; }
+    frame { id="kl5" trans show; }
+    frame { id="kl6" trans show; }
+    frame { 
+        frame id="reset-kl";
+        id="kl7" trans show; 
+    }
+    frame { id="kl8" trans show; }
+    frame { id="kl9" trans show; }
+    frame { id="kl10" trans show; }
+    frame { id="kl11" trans show; }
+    frame {
+        frame id="reset-kl";
+        id="kl12" trans show;
+    }
+    frame { id="kl13" trans show; }
+    frame { id="kl14" trans show; }
+    frame { id="kl15" trans show; }
+    frame { id="kl16" trans show; }
+    frame { 
+        frame id="reset-kl";
+        id="kl17" trans show; 
+    }
+    frame { id="kl18" trans show; }
+    frame { id="kl19" trans show; }
+    frame { id="kl20" trans show; }
+    frame { id="kl21" trans show; }
+    frame { id="kl22" trans show; }
+    frame {
+        frame id="reset-kl";
+        id="kl23" trans show;
+    }
+    frame { id="kl24" trans show; }
+    frame { id="kl25" trans show; }
+    frame {
+        frame id="reset-kl";
+        id="kl26" trans show;
+    }
+    frame { id="kl27" trans show; }
+    frame { id="kl28" trans show; }
+    frame { id="kl29" trans show; }
+
+    frame id="frame-aa" {
+        id="slide-kl" trans hide;
+        id="title-slide-aa" trans show;
+    }
+    frame {
+        id="title-slide-aa" trans hide;
+        id="slide-aa" show;
+    }
+    frame { id="aa1" trans show; }
+    frame { id="aa2" trans show; }
+    frame { id="aa3" trans show; }
+    frame { id="aa4" trans show; }
+    frame { id="aa5" trans show; }
+    frame {
+        frame id="reset-aa";
+        id="aa6" trans show;
+    }
+    frame { id="aa7" trans show; }
+    frame { id="aa8" trans show; }
+    frame {
+        id="aa8" trans hide;
+        id="aa9" trans show;
+    }
+    frame {
+        frame id="reset-aa";
+        id="aa10" trans show;
+    }
+    frame { id="aa11" trans show; }
+    frame { id="aa12" trans show; }
+    frame {
+        id="vid5" play;
+        id="vid6" play;
+        id="vid7" play;
+    }
+    frame {
+        frame id="reset-aa";
+        id="aa13" trans show;
+    }
+    frame { id="aa14" trans show; }
+    frame { 
+        id="aa14" trans hide;
+        id="aa15" trans show; 
+    }
+    frame {
+        id="aa15" trans hide;
+        id="aa16" trans show;
+    }
+    frame {
+        frame id="reset-aa";
+        id="aa17" trans show;
+    }
+    frame { 
+        id="aa18" trans show; 
+        id="aa18b" trans show; 
+    }
+    frame {
+        id="aa18" trans hide;
+        id="aa18b" trans hide;
+        id="aa19" trans show;
+        id="aa19b" trans show;
+    }
+    frame {
+        id="aa19" trans hide;
+        id="aa19b" trans hide;
+        id="aa20" trans show;
+        id="aa20b" trans show;
+    }
+    frame {
+        id="aa20" trans hide;
+        id="aa20b" trans hide;
+        id="aa21" trans show;
+        id="aa21b" trans show;
+    }
+    frame {
+        frame id="reset-aa";
+        id="aa22" trans show;
+    }
+    frame { id="aa23" trans show; }
+    frame { id="aa24" trans show; }
+    frame {
+        id="vid8" play;
+        id="vid9" play;
+        id="vid10" play;
+        id="vid11" play;
+    }
+    frame {
+        id="aa23" trans hide;
+        id="aa24" trans hide;
+        id="aa25" trans show;
+        id="aa25b" trans show;
+    }
+    frame {
+        id="aa25" trans hide;
+        id="aa25b" trans hide;
+        id="aa26" trans show;
+        id="aa26b" trans show;
+    }
+}

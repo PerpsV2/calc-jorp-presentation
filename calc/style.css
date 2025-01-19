@@ -1,0 +1,132 @@
+:root {
+    --dark-background-colour: #292929;
+    --background-colour: #464646;
+    --text-colour: #ffffff;
+}
+
+.flex {
+    display: flex;
+}
+
+.vertical {
+    flex-direction: column;
+}
+
+.horizontal {
+    flex-direction: row;
+}
+
+.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.hide {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.trans {
+    transition: 0.5s;
+}
+
+.left {
+    transform: translateX(-100vw);
+}
+
+.right {
+    transform: translateX(100vw);
+}
+
+.up {
+    transform: translateY(-100vh);
+}
+
+.down {
+    transform: translateY(100vh);
+}
+
+/* Slide related classes */
+
+.black {
+    background-color: black;
+}
+
+.title-bar {
+    background-color: var(--dark-background-colour);
+    box-shadow: 0 0 10px black;
+}
+
+.padding {
+    padding: 3vw;
+}
+
+.padding-small {
+    padding: 0.5vw;
+}
+
+.indent {
+    padding-left: 3vw;
+}
+
+.bottom-margin {
+    margin-bottom: 0.9vw;
+}
+
+.bottom-margin-big {
+    margin-bottom: 2vw;
+}
+
+.center-text {
+    text-align: center;
+}
+
+.vertical-center {
+    display: flex;
+    justify-content: center;
+}
+
+.horizontal-center {
+    text-align: center;
+}
+
+.center-center {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.slide {
+    background-color: var(--background-colour);
+}
+
+.info-box {
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px black;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    color: var(--text-colour);
+}
+
+h1 {
+    font-size: 6vw;
+}
+
+h2 {
+    font-size: 4vw;
+}
+
+h3 {
+    font-size: 3vw;
+}
+
+p {
+    font-size: 2.5vw;
+}
+
+#calculator {
+    width: 75vw;
+    height: 40vw;
+}
